@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.9)
-project(road_width_calculator)
+project(machine_learning_package)
 
 set(CMAKE_CXX_STANDARD 11)
 
 set(MAIN_SOURCE_FILE main.cpp)
 aux_source_directory(./src DIR_SRCS)
+aux_source_directory(./ml DIR_SRCS)
+aux_source_directory(./ml_trainer DIR_SRCS)
+aux_source_directory(./utils DIR_SRCS)
 
 FIND_PACKAGE( OpenMP REQUIRED)
 if(OPENMP_FOUND)
@@ -15,7 +18,7 @@ if(OPENMP_FOUND)
 endif()
 include_directories(${OpenMP_INCLUDE_DIRS})
 
-SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -g -Wall")
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -g -Wall")
 
 find_package(Boost REQUIRED)
 if(!Boost_FOUND)
@@ -34,19 +37,17 @@ link_directories(${Opencv_LIBRARY_DIRS})
 include_directories (
         /usr/include
         /usr/local/include
-        ./include
-        ./include/rapidjson
-        ./include/mitab
+        ./utils
+        ./ml
+        ./ml_trainer
 )
 
-add_executable(task_server ${MAIN_SOURCE_FILE} ${DIR_SRCS})
+add_executable(linearregression ${MAIN_SOURCE_FILE} ${DIR_SRCS})
 
-target_link_libraries(task_server
+target_link_libraries(linearregression
         ${OpenCV_LIBS}
         libboost_regex.so
         libboost_filesystem.so
         libboost_system.so
         libglog.so
-        libsqlite3.so
-        libmitab.so
         )

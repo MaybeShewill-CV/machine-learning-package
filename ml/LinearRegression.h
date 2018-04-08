@@ -19,6 +19,7 @@ public:
 
     void fit(const Eigen::MatrixXd& X, const Eigen::MatrixXd& Y) override;
     void predict(const Eigen::MatrixXd& X, Eigen::MatrixXd& Y) override ;
+    Eigen::MatrixXd get_kernel() {return kernel;};
 
 private:
     void init_weights(int feats_dims, int label_dims, Eigen::MatrixXd& kernel);
@@ -32,11 +33,10 @@ private:
     double compuet_bias_gradient(
             const Eigen::MatrixXd& preds, const Eigen::MatrixXd& label);
 
-    double lr = 0.0001;
+    double lr = 0.001;
     int iter_nums = 10000000;
     Eigen::MatrixXd kernel;
     double bias;
-
 };
 
 

@@ -70,8 +70,7 @@ Eigen::MatrixXd LinearRegression::linear_transform(const Eigen::MatrixXd &X,
     auto kernel_rows = kernal.rows();
     if (x_cols != kernel_rows) {
         LOG(ERROR) << "Matrix Multiplication shape error";
-        auto ret = Eigen::MatrixXd::Zero(1, 1);
-        return ret;
+        assert(x_cols == kernel_rows);
     }
     Eigen::MatrixXd ret = X * kernal;
     ret = ret.array() + bias;

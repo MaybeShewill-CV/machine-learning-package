@@ -17,9 +17,12 @@ public:
     virtual ~MLTrainerBase() = default;
 
     virtual void train(const std::string& input_file_path) = 0;
+    virtual void test(const std::string& input_file_path) = 0;
+    virtual void deploy(const std::string& input_file_path) = 0;
 
 private:
     DataLoder dataLoder;
+    virtual bool is_model_trained() = 0;
 
 };
 

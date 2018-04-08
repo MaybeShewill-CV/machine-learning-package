@@ -39,6 +39,8 @@ int main(int argc, char **argv) {
     }
     LinearRegressionTrainer trainer;
     trainer.train(argv[1]);
+    trainer.test(argv[1]);
+    trainer.deploy(argv[1]);
 #endif
 
 #ifdef TEST

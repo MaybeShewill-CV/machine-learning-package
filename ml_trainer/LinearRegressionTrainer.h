@@ -19,10 +19,14 @@ public:
     ~LinearRegressionTrainer() override = default;
 
     void train(const std::string& input_file_path) override;
+    void test(const std::string& input_file_path) override;
+    void deploy(const std::string& input_file_path) override;
 
 private:
     DataLoder dataLoder;
     LinearRegression regressor;
+
+    bool is_model_trained() override;
 };
 
 

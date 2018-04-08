@@ -5,7 +5,7 @@
 * Date: 18-4-4 下午2:48
 ************************************************/
 
-#include "LinearRegressionTrainer.h"
+#include "linearRegressionTrainer.h"
 
 #include <algorithm>
 

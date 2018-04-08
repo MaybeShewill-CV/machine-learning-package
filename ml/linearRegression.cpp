@@ -5,7 +5,7 @@
 * Date: 18-4-3 下午3:00
 ************************************************/
 
-#include "LinearRegression.h"
+#include "linearRegression.h"
 
 #include <iomanip>
 #include <cstdlib>
@@ -51,8 +51,8 @@ void LinearRegression::fit(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) {
     }
 }
 
-void LinearRegression::predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &Y) {
-    Y = linear_transform(X, kernel, bias);
+void LinearRegression::predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) {
+    RET = linear_transform(X, kernel, bias);
 }
 
 void LinearRegression::init_weights(const int feats_dims, const int label_dims, Eigen::MatrixXd &kernel) {

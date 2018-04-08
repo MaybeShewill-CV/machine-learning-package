@@ -18,7 +18,7 @@ public:
     LinearRegression(double lr, int iter_nums);
 
     void fit(const Eigen::MatrixXd& X, const Eigen::MatrixXd& Y) override;
-    void predict(const Eigen::MatrixXd& X, Eigen::MatrixXd& Y) override ;
+    void predict(const Eigen::MatrixXd& X, Eigen::MatrixXd& RET) override ;
     Eigen::MatrixXd get_kernel() {return kernel;};
 
 private:

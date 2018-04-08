@@ -9,7 +9,7 @@
 #define MACHINE_LEARNING_PACKAGE_LINEARREGRESSIONTRAINER_H
 
 #include <MLTrainerBase.h>
-#include <LinearRegression.h>
+#include <linearRegression.h>
 
 #include <string>
 

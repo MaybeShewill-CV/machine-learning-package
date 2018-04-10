@@ -12,21 +12,7 @@
 #include <glog/logging.h>
 #include <opencv2/opencv.hpp>
 
-namespace internal_func {
-    template <typename T>
-    std::vector<size_t> sort_indexes(const std::vector<T> &v) {
-
-        // initialize original index locations
-        std::vector<size_t> idx(v.size());
-        std::iota(idx.begin(), idx.end(), 0);
-
-        // sort indexes based on comparing values in v
-        std::sort(idx.begin(), idx.end(),
-                  [&v](size_t i1, size_t i2) {return v[i1] < v[i2];});
-
-        return idx;
-    }
-}
+#include <globalUtils.h>
 
 void LinearRegressionTrainer::train(const std::string &input_file_path) {
     Eigen::MatrixXd input_data;
@@ -82,7 +68,7 @@ void LinearRegressionTrainer::test(const std::string &input_file_path) {
     std::vector<double> Y_Scale;
     std::vector<double> Preds_Scale;
 
-    std::vector<size_t > sort_index = internal_func::sort_indexes(X_vec);
+    std::vector<size_t > sort_index = GlobalUtils::sort_indexes(X_vec);
     for (auto i : sort_index) {
         X_Scale.push_back(X_vec[i]);
         Y_Scale.push_back(Y_vec[i]);

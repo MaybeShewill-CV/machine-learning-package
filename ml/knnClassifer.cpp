@@ -15,26 +15,9 @@
 
 //#define DEBUG
 
-KnnClassifer::KnnClassifer() {
-    distance_type = EUCLIDEAN;
-};
+KnnClassifer::KnnClassifer(): distance_type(EUCLIDEAN) {};
 
 KnnClassifer::~KnnClassifer() = default;
-
-namespace internal {
-    template <typename T>
-    std::vector<std::size_t> sort_indexes(const std::vector<T> &v) {
-        // initialize original index locations
-        std::vector<std::size_t> idx(v.size());
-        std::iota(idx.begin(), idx.end(), 0);
-
-        // sort indexes based on comparing values in v
-        std::sort(idx.begin(), idx.end(),
-                  [&v](size_t i1, size_t i2) {return v[i1] < v[i2];});
-
-        return idx;
-    }
-}
 
 KnnClassifer::KnnClassifer(int k_nums, DISTANCE_TYPE distance_type):
         k_nums(k_nums), distance_type(distance_type) {
@@ -104,7 +87,7 @@ void KnnClassifer::predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) {
         for (auto j = 0; j < feats_distance_matrix.row(i).cols(); ++j) {
             feats_distance.push_back(feats_distance_matrix(i, j));
         };
-        auto sort_idx = internal::sort_indexes(feats_distance);
+        auto sort_idx = GlobalUtils::sort_indexes(feats_distance);
 
         for (auto j = 0; j < k_nums; ++j) {
             knn_label_matrix(i, j) = static_cast<int>(label(sort_idx[j]));

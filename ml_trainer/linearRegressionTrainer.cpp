@@ -14,6 +14,9 @@
 
 #include <globalUtils.h>
 
+LinearRegressionTrainer::LinearRegressionTrainer(double lr, int iter_times):
+        regressor(lr, iter_times) {}
+
 void LinearRegressionTrainer::train(const std::string &input_file_path) {
     Eigen::MatrixXd input_data;
     dataLoder.load_data_from_txt(input_file_path, input_data);

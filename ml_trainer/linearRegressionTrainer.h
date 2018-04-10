@@ -18,6 +18,8 @@ public:
     LinearRegressionTrainer() = default;
     ~LinearRegressionTrainer() override = default;
 
+    LinearRegressionTrainer(double lr, int iter_times);
+
     void train(const std::string& input_file_path) override;
     void test(const std::string& input_file_path) override;
     void deploy(const std::string& input_file_path) override;

@@ -31,10 +31,6 @@ public:
     void predict(const Eigen::MatrixXd& X, Eigen::MatrixXd& RET) override;
 
     Eigen::MatrixXd get_norm_feats() {return norm_feats;};
-    void test_distance(const Eigen::ArrayXXd &array_1, const Eigen::ArrayXXd &array_2) {
-        double distance = calculate_distance(array_1, array_2);
-        LOG(INFO) << "计算距离是: " << distance << std::endl;
-    }
 
 private:
     const int k_nums = 3;
@@ -44,7 +40,6 @@ private:
     Eigen::MatrixXd label; // 归一化特征对应标签
 
     double calculate_distance(const Eigen::ArrayXXd &array_1, const Eigen::ArrayXXd &array_2);
-
 
 };
 

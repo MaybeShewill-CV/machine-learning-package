@@ -44,7 +44,7 @@ void knnClassiferTrainer::test(const std::string &input_file_path) {
     classifer.predict(X, RET);
 
     LOG(INFO) << "测试结果如下:" << std::endl;
-    LOG(INFO) << "--- Label: --- Predict: ---" << std::endl;
+    LOG(INFO) << "--- Label --- Predict ---" << std::endl;
     int correct_preds_counts = 0;
     for (auto i = 0; i < Y.rows(); ++i) {
         LOG(INFO) << "--- " << Y(i, 0) << " --- " << RET(i, 0) << " ---" << std::endl;
@@ -69,7 +69,7 @@ void knnClassiferTrainer::deploy(const std::string &input_file_path) {
 
     LOG(INFO) << "预测结果如下:" << std::endl;
     for (auto i = 0; i < RET.rows(); ++i) {
-        LOG(INFO) << "样本:" << i << "　预测类别: " << RET(i, 0) << std::endl;
+        LOG(INFO) << "样本: " << i << "　类别: " << RET(i, 0) << std::endl;
     }
 }
 

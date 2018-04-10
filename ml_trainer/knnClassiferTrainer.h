@@ -8,12 +8,24 @@
 #ifndef MACHINE_LEARNING_PACKAGE_KNNCLASSIFERTRAINER_H
 #define MACHINE_LEARNING_PACKAGE_KNNCLASSIFERTRAINER_H
 
+#include <MLTrainerBase.h>
+#include <knnClassifer.h>
 
+class knnClassiferTrainer: public MLTrainerBase {
+public:
+    knnClassiferTrainer() = default;
+    ~knnClassiferTrainer() override = default;
 
-class knnClassiferTrainer {
+    void train(const std::string& input_file_path) override;
+    void test(const std::string& input_file_path) override;
+    void deploy(const std::string& input_file_path) override;
 
+private:
+    DataLoder dataLoder;
+    KnnClassifer classifer;
+
+    bool is_model_trained() override;
 };
-
 
 
 #endif //MACHINE_LEARNING_PACKAGE_KNNCLASSIFERTRAINER_H

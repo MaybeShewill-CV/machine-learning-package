@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
 
     trainer.train(argv[1]);
     trainer.test(argv[2]);
-//    trainer.deploy(argv[3]);
+    trainer.deploy(argv[3]);
 #endif
 
 #ifdef TEST

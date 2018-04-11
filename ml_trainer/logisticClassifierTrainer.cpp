@@ -61,6 +61,23 @@ void logisticClassifierTrainer::deploy(const std::string &input_file_path) {
         LOG(INFO) << "模型未训练" << std::endl;
         return;
     }
+
+    Eigen::MatrixXd input_data;
+    dataLoder.load_data_from_txt(input_file_path, input_data);
+
+    Eigen::MatrixXd X(input_data.rows(), input_data.cols() - 2);
+    Eigen::MatrixXd Y(input_data.rows(), 1);
+    for (auto i  = 0; i < X.cols(); ++i) {
+        X.col(i) = input_data.col(i + 1);
+    }
+    Y = input_data.col(input_data.cols() - 1);
+
+    Eigen::MatrixXd preds;
+    classifier.predict(X, preds);
+    LOG(INFO) << "预测结果如下" << std::endl;
+    for (auto i = 0; i < preds.rows(); ++i) {
+        LOG(INFO) << "样本:" << i + 1 << " 标签: " << static_cast<int>(round(preds(i, 0))) << std::endl;
+    }
 }
 
 bool logisticClassifierTrainer::is_model_trained() {

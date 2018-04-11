@@ -7,8 +7,6 @@
 
 #include "logisticRegression.h"
 
-#include <random>
-
 #include <glog/logging.h>
 
 //#define DEBUG
@@ -112,7 +110,7 @@ double logisticRegression::compute_loss(const Eigen::MatrixXd &X, const Eigen::M
     Eigen::RowVectorXd Y_vec(Y.rows());
     for (auto i = 0; i < Y.rows(); ++i) {
         if (Y(i, 0) == 0.0) {
-            Y_vec(0, i) = 0.0;
+            Y_vec(0, i) = -1.0;
         } else {
             Y_vec(0, i) = 1.0;
         }

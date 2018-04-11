@@ -23,12 +23,13 @@ public:
     void test(const std::string& input_file_path) override ;
     void deploy(const std::string& input_file_path) override ;
 
+    logisticRegression get_classifier() {return classifier;};
+
 private:
     DataLoder dataLoder;
     logisticRegression classifier;
 
     bool is_model_trained() override ;
-
 };
 
 

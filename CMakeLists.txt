@@ -3,7 +3,7 @@ project(machine_learning_package)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(MAIN_SOURCE_FILE main.cpp)
+set(MAIN_SOURCE_FILE main_test.cpp)
 aux_source_directory(./src DIR_SRCS)
 aux_source_directory(./ml DIR_SRCS)
 aux_source_directory(./ml_trainer DIR_SRCS)
@@ -42,9 +42,9 @@ include_directories (
         ./ml_trainer
 )
 
-add_executable(linearregression ${MAIN_SOURCE_FILE} ${DIR_SRCS})
+add_executable(logisticclassifier ${MAIN_SOURCE_FILE} ${DIR_SRCS})
 
-target_link_libraries(linearregression
+target_link_libraries(logisticclassifier
         ${OpenCV_LIBS}
         libboost_regex.so
         libboost_filesystem.so

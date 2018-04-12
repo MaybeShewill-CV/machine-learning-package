@@ -15,8 +15,8 @@ public:
     MLBase() = default;
     virtual ~MLBase() = default;
 
-    virtual void fit(const Eigen::MatrixXd& X, const Eigen::MatrixXd& Y) = 0;
-    virtual void predict(const Eigen::MatrixXd& X, Eigen::MatrixXd& RET) = 0;
+    virtual void fit(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) = 0;
+    virtual void predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) = 0;
 
 };
 

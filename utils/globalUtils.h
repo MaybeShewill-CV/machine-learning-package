@@ -9,6 +9,7 @@
 #define MACHINE_LEARNING_PACKAGE_GLOBALUTILS_H
 
 #include <vector>
+#include <map>
 #include <algorithm>
 
 class GlobalUtils {
@@ -26,6 +27,11 @@ public:
                   [&v](size_t i1, size_t i2) {return v[i1] < v[i2];});
 
         return idx;
+    };
+
+    template <typename T, typename V>
+    static bool has_key(const std::map<T, V> &kv_map, const T& key) {
+        return kv_map.count(key) > 0;
     };
 };
 

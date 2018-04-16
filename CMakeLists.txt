@@ -42,9 +42,9 @@ include_directories (
         ./ml_trainer
 )
 
-add_executable(logisticclassifier ${MAIN_SOURCE_FILE} ${DIR_SRCS})
+add_executable(decisiontree_test ${MAIN_SOURCE_FILE} ${DIR_SRCS})
 
-target_link_libraries(logisticclassifier
+target_link_libraries(decisiontree_test
         ${OpenCV_LIBS}
         libboost_regex.so
         libboost_filesystem.so

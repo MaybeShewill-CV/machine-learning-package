@@ -8,12 +8,14 @@
 #include <linearRegression.h>
 #include <knnClassiferTrainer.h>
 #include <logisticClassifierTrainer.h>
+#include <decisionTree.h>
 
 //#define TEST
 //#define DATALOADER_TEST
 //#define LINEARREGRESSION_TEST
 //#define KNNCLASSIFIER_TEST
-#define LOGISTICCLASSIFIER_TEST
+//#define LOGISTICCLASSIFIER_TEST
+#define DECISIONTREE_TEST
 
 int main(int argc, char **argv) {
 
@@ -72,6 +74,11 @@ int main(int argc, char **argv) {
     trainer.deploy(argv[3]);
 #endif
 
+#ifdef DECISIONTREE_TEST
+    decisionTree tree;
+    tree.test();
+#endif
+
 #ifdef TEST
     Eigen::MatrixXd matrix1(2, 2);
     matrix1 << 1, 2, 3, 4;
@@ -79,7 +86,8 @@ int main(int argc, char **argv) {
     matrix2 << 5, 6, 7, 8;
     LOG(INFO) << matrix1 << matrix2 << std::endl;
     Eigen::RowVectorXd rowvector(2);
-    rowvector << 1, 2;
+    rowvector << 1;
+    rowvector << 2;
     LOG(INFO) << rowvector << " " << rowvector.rows() << " " << rowvector.cols() << std::endl;
 
     LOG(INFO) << "Matrix1 col 1: " << matrix1.col(0) << std::endl;
@@ -88,19 +96,13 @@ int main(int argc, char **argv) {
     auto add_ret = matrix1.array() + 1;
     auto sum_ret = matrix1.sum();
     Eigen::RowVectorXd multiply_ret = matrix1 * rowvector.transpose();
-    multiply_ret = exp(((multiply_ret.array() * (-1)).array()).array()) + 1;
-    multiply_ret = multiply_ret.cwiseInverse();
-    auto exp_ret = exp(rowvector.array()) + 1;
-    auto log_ret = log(exp_ret.array()).sum();
     LOG(INFO) << "Add result is " << add_ret << std::endl;
     LOG(INFO) << "Dot result is " << dot_ret << std::endl;
     LOG(INFO) << "Sum result is " << sum_ret << std::endl;
     LOG(INFO) << "Multiply result is " << multiply_ret <<  std::endl;
-    LOG(INFO) << "Exp result is " << exp_ret << std::endl;
-    LOG(INFO) << "Log result is " << log_ret << std::endl;
 #endif
 
-    google::ShutdownGoogleLogging();
+     google::ShutdownGoogleLogging();
 
     return 0;
 }

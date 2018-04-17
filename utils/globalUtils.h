@@ -33,6 +33,16 @@ public:
     static bool has_key(const std::map<T, V> &kv_map, const T& key) {
         return kv_map.count(key) > 0;
     };
+
+    template <typename T>
+    static bool has_elements(const std::vector<T> vec, const T& ele_val) {
+        for (auto &ele : vec) {
+            if (ele == ele_val) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 #endif //MACHINE_LEARNING_PACKAGE_GLOBALUTILS_H

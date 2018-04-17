@@ -8,7 +8,7 @@
 #include <linearRegression.h>
 #include <knnClassiferTrainer.h>
 #include <logisticClassifierTrainer.h>
-#include <decisionTree.h>
+#include <decisionTreeClassiferTrainer.h>
 
 //#define TEST
 //#define DATALOADER_TEST
@@ -75,8 +75,15 @@ int main(int argc, char **argv) {
 #endif
 
 #ifdef DECISIONTREE_TEST
-    decisionTree tree;
-    tree.test();
+    if (argc != 4) {
+        LOG(INFO) << "Usage: " << std::endl;
+        LOG(INFO) << "./decisiontreeclassifier dtree训练数据 dtree测试数据 dtree验证数据" << std::endl;
+        return -1;
+    }
+    decisionTreeClassiferTrainer trainer;
+    trainer.train(argv[1]);
+    trainer.test(argv[2]);
+//    trainer.deploy(argv[3]);
 #endif
 
 #ifdef TEST

@@ -17,15 +17,17 @@ public:
     decisionTreeClassiferTrainer() = default;
     ~decisionTreeClassiferTrainer() override = default;
 
+    explicit decisionTreeClassiferTrainer(DTREE_TYPE dtree_type);
+
     void train(const std::string& input_file_path) override ;
     void test(const std::string& input_file_path) override ;
     void deploy(const std::string& input_file_path) override ;
 
 private:
+    DTREE_TYPE dtreeType = ID3_DTREE;
     DataLoder dataLoder;
-    decisionTree classifier;
+    decisionTree classifier = decisionTree(dtreeType);
     bool is_model_trained() override ;
 };
-
 
 #endif //MACHINE_LEARNING_PACKAGE_DECISIONTREECLASSIFERTRAINER_H

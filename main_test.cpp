@@ -80,10 +80,10 @@ int main(int argc, char **argv) {
         LOG(INFO) << "./decisiontreeclassifier dtree训练数据 dtree测试数据 dtree验证数据" << std::endl;
         return -1;
     }
-    decisionTreeClassiferTrainer trainer;
+    decisionTreeClassiferTrainer trainer(ID3_DTREE);
     trainer.train(argv[1]);
     trainer.test(argv[2]);
-//    trainer.deploy(argv[3]);
+    trainer.deploy(argv[3]);
 #endif
 
 #ifdef TEST

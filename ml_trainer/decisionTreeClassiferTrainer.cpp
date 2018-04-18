@@ -9,7 +9,9 @@
 
 #include <glog/logging.h>
 
-#define DEBUG
+//#define DEBUG
+
+decisionTreeClassiferTrainer::decisionTreeClassiferTrainer(DTREE_TYPE dtree_type): dtreeType(dtree_type) {};
 
 void decisionTreeClassiferTrainer::train(const std::string &input_file_path) {
     Eigen::MatrixXd input_data;
@@ -61,7 +63,25 @@ void decisionTreeClassiferTrainer::test(const std::string &input_file_path) {
 }
 
 void decisionTreeClassiferTrainer::deploy(const std::string &input_file_path) {
+    if (!is_model_trained()) {
+        LOG(INFO) << "模型未训练" << std::endl;
+        return;
+    }
 
+    Eigen::MatrixXd input_data;
+    dataLoder.load_data_from_txt(input_file_path, input_data);
+    Eigen::MatrixXd X(input_data.rows(), input_data.cols() - 1);
+    for (auto i  = 0; i < X.cols(); ++i) {
+        X.col(i) = input_data.col(i);
+    }
+
+    Eigen::MatrixXd RET;
+    classifier.predict(X, RET);
+
+    LOG(INFO) << "预测结果如下:" << std::endl;
+    for (auto i = 0; i < RET.rows(); ++i) {
+        LOG(INFO) << "样本: " << i << "　类别: " << RET(i, 0) << std::endl;
+    }
 }
 
 bool decisionTreeClassiferTrainer::is_model_trained() {

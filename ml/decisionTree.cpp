@@ -15,8 +15,19 @@
 
 #define DEBUG
 
+decisionTree::decisionTree(DTREE_TYPE dtree_type): dtreeType(dtree_type) {};
+
 void decisionTree::fit(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) {
-    build_ID3_decision_tree(X, Y);
+    switch (dtreeType) {
+        case ID3_DTREE: {
+            build_ID3_decision_tree(X, Y);
+            break;
+        }
+        case C45_DTREE: {
+            build_C45_decision_tree(X, Y);
+            break;
+        }
+    }
 
 #ifdef DEBUG
     decision_tree.print_node(0);
@@ -31,10 +42,6 @@ void decisionTree::predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) {
         ret(i, 0) = label;
     }
     RET = ret;
-
-#ifdef DEBUG
-//    LOG(INFO) << "预测结果为: " << RET << std::endl;
-#endif
 }
 
 void decisionTree::predict_each_eample(const Eigen::RowVectorXd &X, double *label) {
@@ -110,7 +117,18 @@ void decisionTree::build_ID3_decision_tree(const Eigen::MatrixXd &X, const Eigen
     std::vector<size_t > feats_has_been_selected;
     std::vector<size_t > samples_has_been_selected;
     treeNode tree_root(X, Y, WRONG_SPLIT_FEATS_INDEX, WRONG_SPLIT_FEATS_VALUE,
-                       feats_has_been_selected, samples_has_been_selected);
+                       feats_has_been_selected, samples_has_been_selected, dtreeType);
+
+    // 递归构造决策树
+    tree_root.extend_tree_node(0);
+    decision_tree = tree_root;
+}
+
+void decisionTree::build_C45_decision_tree(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) {
+    std::vector<size_t > feats_has_been_selected;
+    std::vector<size_t > samples_has_been_selected;
+    treeNode tree_root(X, Y, WRONG_SPLIT_FEATS_INDEX, WRONG_SPLIT_FEATS_VALUE,
+                       feats_has_been_selected, samples_has_been_selected, dtreeType);
 
     // 递归构造决策树
     tree_root.extend_tree_node(0);
@@ -171,10 +189,52 @@ double treeNode::compute_information_gain_ratio(const Eigen::MatrixXd &Y, int fe
     return information_gain / empirical_entropy;
 }
 
+double treeNode::compute_gini_value(const Eigen::MatrixXd &Y) {
+    std::map<int, int> label_instance_count;
+    for (auto i = 0; i < Y.rows(); ++i) {
+        auto label = static_cast<int>(Y(i, 0));
+        if (GlobalUtils::has_key(label_instance_count, label)) {
+            label_instance_count[label] += 1;
+        }
+        else {
+            label_instance_count.insert(std::make_pair(label, 1));
+        }
+    }
+
+    auto label_nums = static_cast<double>(Y.rows());
+    double gini_value = 0.0;
+    for (auto &key_value : label_instance_count) {
+        auto tmp = key_value.second / label_nums;
+        gini_value += std::pow(tmp, 2);
+    }
+    return 1 - gini_value;
+}
+
+double treeNode::compute_gini_coefficient(const Eigen::MatrixXd &Y, int feats_idx) {
+    std::vector<Eigen::MatrixXd> Y_split_vec;
+    Eigen::RowVectorXd feats_vec = node_origin_disperse_features_sel.col(feats_idx);
+    auto disperse_feats_category_nums = feats_vec.maxCoeff();
+    for (auto i = 0; i < disperse_feats_category_nums + 1; ++i) {
+        Eigen::MatrixXd Y_split(internal_func::count_elements(feats_vec, static_cast<double>(i)), 1);
+        int row_index = 0;
+        for (auto j = 0; j < feats_vec.cols(); ++j) {
+            if (feats_vec(0, j) == i) {
+                Y_split(row_index, 0) = Y(j, 0);
+                row_index++;
+            }
+        }
+        Y_split_vec.push_back(Y_split);
+    }
+
+    // TODO 实现基尼指数计算
+    return 0.0;
+}
+
 treeNode::treeNode(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y,
                    size_t split_feats_index_, double split_feats_value_,
                    std::vector<size_t > &split_feats_index_vec_,
-                   std::vector<size_t > &feats_row_index_vec_) {
+                   std::vector<size_t > &feats_row_index_vec_,
+                   DTREE_TYPE dtree_type) {
     node_origin_features = X;
     node_origin_labels = Y;
     split_feats_index = split_feats_index_;
@@ -194,7 +254,7 @@ treeNode::treeNode(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y,
         if (GlobalUtils::has_elements(feats_has_been_selected_index, static_cast<size_t >(i))) {
             continue;
         } else {
-            feats_remain_index.push_back(i);
+            feats_remain_index.push_back(static_cast<size_t >(i));
         }
     }
     node_origin_disperse_features_sel = internal_func::sub_matrix(
@@ -205,6 +265,7 @@ treeNode::treeNode(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y,
                                                          feats_remain_index);
     std::vector<size_t > tmp = {0};
     node_origin_labels_sel = internal_func::sub_matrix(Y, samples_has_been_selected_index, tmp);
+    dtreeType = dtree_type;
 }
 
 void treeNode::extend_tree_node(int depth) {
@@ -215,16 +276,25 @@ void treeNode::extend_tree_node(int depth) {
         if (GlobalUtils::has_elements(feats_has_been_selected_index, static_cast<size_t >(i))) {
             info_gain_scores.push_back(-1.0);
         } else {
-            info_gain_scores.push_back(compute_information_gain(node_origin_labels_sel, j));
+            if (dtreeType == ID3_DTREE) {
+                info_gain_scores.push_back(compute_information_gain(node_origin_labels_sel, j));
+            } else if (dtreeType == C45_DTREE) {
+                info_gain_scores.push_back(compute_information_gain_ratio(node_origin_labels_sel, j));
+            }
             j++;
         }
     }
     std::vector<size_t > sort_idx = GlobalUtils::sort_indexes(info_gain_scores);
     size_t idx = sort_idx[sort_idx.size() - 1];
     split_feats_index = idx;
-//    LOG(INFO) << "第" << depth << "层，选择特征 " << split_feats_index
-//              << ",信息增益为: " << info_gain_scores[idx] << std::endl;
-//    LOG(INFO) << "第" << depth << "层，稀疏特征矩阵为: " << node_origin_disperse_features_sel << std::endl;
+    if (dtreeType == ID3_DTREE) {
+        LOG(INFO) << "第" << depth << "层，选择特征 " << split_feats_index
+                  << ",信息增益为: " << info_gain_scores[idx] << std::endl;
+    } else if (dtreeType == C45_DTREE) {
+        LOG(INFO) << "第" << depth << "层，选择特征 " << split_feats_index
+                  << ",信息增益比为: " << info_gain_scores[idx] << std::endl;
+    }
+
     feats_has_been_selected_index.push_back(split_feats_index);
     std::map<double, treeNode> child_nodes_tmp;
     std::set<double> disperse_feats_values;
@@ -239,7 +309,7 @@ void treeNode::extend_tree_node(int depth) {
                                                 idx, feats_val, samples_has_been_selected_index);
         // 选择特征值等于feats_val的除去该特征列的其余特征矩阵
         treeNode child_node(node_origin_features, node_origin_labels, split_feats_index, feats_val,
-        feats_has_been_selected_index, row_idx);
+        feats_has_been_selected_index, row_idx, dtreeType);
         child_nodes_tmp.insert(std::make_pair(feats_val, child_node));
     }
 
@@ -274,22 +344,28 @@ double treeNode::search_node(const Eigen::RowVectorXd &feats_vec) {
 }
 
 bool treeNode::is_node_need_extend() {
-    // 如果特征空间已经分块完毕则不继续生长子叶子
-    if (node_origin_features_sel.cols() <= 1) {return false;}
+    switch (dtreeType) {
+        case ID3_DTREE: {
+            // 如果特征空间已经分块完毕则不继续生长子叶子
+            if (node_origin_features_sel.cols() <= 1) {return false;}
 
-    // 如果节点有且只有一个样本
-//    if (samples_has_been_selected_index.size() <= 1) {return false;}
-
-    // 如果该节点全部的类别一致则不继续生长
-    std::set<double> label_set;
-    for (auto i = 0; i < node_origin_labels_sel.rows(); ++i) {
-        label_set.insert(node_origin_labels_sel(i, 0));
+            // 如果该节点全部的类别一致则不继续生长
+            std::set<double> label_set;
+            for (auto i = 0; i < node_origin_labels_sel.rows(); ++i) {
+                label_set.insert(node_origin_labels_sel(i, 0));
+            }
+            return label_set.size() > 1;
+        }
+        case C45_DTREE: {
+            // TODO 修改C45决策树停止生长条件
+            return false;
+        }
     }
-    return label_set.size() > 1;
+
 }
 
 void treeNode::print_node(const int depth) {
-    // TODO 需要检查分裂的时候有没有特征选择错误,然后寻找更好的可视化树结构的方法
+    // TODO 寻找更好的树可视化方法
     if (is_node_need_extend()) {
         LOG(INFO) << "第" << depth <<  "层需要分裂，分裂特征索引为: " << split_feats_index
                   << "，分裂节点特征值为: " << split_feats_value

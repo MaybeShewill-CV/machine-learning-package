@@ -13,18 +13,27 @@
 #include <map>
 #include <set>
 
+// TODO 实现cart决策树
+
 const size_t WRONG_SPLIT_FEATS_INDEX = 999999;
 const double WRONG_NODE_LABEL = -99999.0;
 const double WRONG_SPLIT_FEATS_VALUE = 9999999.0;
+
+enum DTREE_TYPE {
+    ID3_DTREE,
+    C45_DTREE
+};
 
 class treeNode {
 public:
     treeNode() = default;
     ~treeNode() = default;
+
     treeNode (const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y,
               size_t split_feats_index_, double split_feats_value,
               std::vector<size_t > &split_feats_index_vec_,
-              std::vector<size_t > &feats_row_index_vec_);
+              std::vector<size_t > &feats_row_index_vec_,
+              DTREE_TYPE dtree_type);
 
     void extend_tree_node(int depth);
     double search_node(const Eigen::RowVectorXd &feats_vec);
@@ -53,6 +62,7 @@ private:
     double split_feats_value = WRONG_SPLIT_FEATS_VALUE; //　分裂节点对应的特征离散值
     double node_label = WRONG_NODE_LABEL; // 子节点对应的节点标签
     std::map<double, treeNode> child_treeNodes; // 节点的子节点容器
+    DTREE_TYPE dtreeType = ID3_DTREE;
 
     // 节点还需要分裂
     bool is_node_need_extend();
@@ -62,6 +72,10 @@ private:
     double compute_information_gain(const Eigen::MatrixXd &Y, int feats_idx);
     // 计算信息增益比
     double compute_information_gain_ratio(const Eigen::MatrixXd &Y, int feats_idx);
+    // 计算基尼值
+    double compute_gini_value(const Eigen::MatrixXd &Y);
+    // 计算基尼指数
+    double compute_gini_coefficient(const Eigen::MatrixXd &Y, int feats_idx);
 
 };
 
@@ -70,20 +84,25 @@ public:
     decisionTree() = default;
     ~decisionTree() override = default;
 
+    explicit decisionTree(DTREE_TYPE dtree_type);
+
     void fit(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) override ;
     void predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) override ;
 
     treeNode get_dtree() {return decision_tree;};
 
 private:
-    // 预测一个实例
-    void predict_each_eample(const Eigen::RowVectorXd &X, double *label);
-
     // 决策树
     treeNode decision_tree;
+    // 决策树构造方法选择
+    DTREE_TYPE dtreeType = ID3_DTREE;
 
+    // 预测一个实例
+    void predict_each_eample(const Eigen::RowVectorXd &X, double *label);
     // ID3算法生成决策树
     void build_ID3_decision_tree(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y);
+    // c4.5算法生成决策树
+    void build_C45_decision_tree(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y);
 };
 
 #endif //MACHINE_LEARNING_PACKAGE_DECISIONTREE_H

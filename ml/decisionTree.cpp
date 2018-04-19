@@ -344,6 +344,7 @@ double treeNode::search_node(const Eigen::RowVectorXd &feats_vec) {
 }
 
 bool treeNode::is_node_need_extend() {
+    bool flag = false;
     switch (dtreeType) {
         case ID3_DTREE: {
             // 如果特征空间已经分块完毕则不继续生长子叶子
@@ -354,14 +355,16 @@ bool treeNode::is_node_need_extend() {
             for (auto i = 0; i < node_origin_labels_sel.rows(); ++i) {
                 label_set.insert(node_origin_labels_sel(i, 0));
             }
-            return label_set.size() > 1;
+            flag = label_set.size() > 1;
+            break;
         }
         case C45_DTREE: {
             // TODO 修改C45决策树停止生长条件
-            return false;
+            flag = false;
+            break;
         }
     }
-
+    return flag;
 }
 
 void treeNode::print_node(const int depth) {
@@ -378,6 +381,5 @@ void treeNode::print_node(const int depth) {
         LOG(INFO) << "到达第" << depth << "层叶子节点, 分裂特征索引为: " << split_feats_index
                   << "，分裂节点特征值为: " << split_feats_value
                   << "，标签值为: " << node_label << std::endl;
-        return;
     }
 }

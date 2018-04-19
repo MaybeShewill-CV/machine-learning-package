@@ -9,13 +9,15 @@
 #include <knnClassiferTrainer.h>
 #include <logisticClassifierTrainer.h>
 #include <decisionTreeClassiferTrainer.h>
+#include <kmeansClusterTrainer.h>
 
 //#define TEST
 //#define DATALOADER_TEST
 //#define LINEARREGRESSION_TEST
 //#define KNNCLASSIFIER_TEST
 //#define LOGISTICCLASSIFIER_TEST
-#define DECISIONTREE_TEST
+//#define DECISIONTREE_TEST
+#define KMEANS_TEST
 
 int main(int argc, char **argv) {
 
@@ -84,6 +86,19 @@ int main(int argc, char **argv) {
     trainer.train(argv[1]);
     trainer.test(argv[2]);
     trainer.deploy(argv[3]);
+#endif
+
+#ifdef KMEANS_TEST
+    if (argc != 4) {
+        LOG(INFO) << "Usage: " << std::endl;
+        LOG(INFO) << "./kmeansCluster kmeans训练数据 kmeans测试数据 kmeans验证数据" << std::endl;
+        return -1;
+    }
+    kmeansClusterTrainer clusterTrainer(5, 1000, EUCLIDEAN);
+
+    clusterTrainer.train(argv[1]);
+    clusterTrainer.test(argv[2]);
+//    clusterTrainer.deploy(argv[3]);
 #endif
 
 #ifdef TEST

@@ -42,9 +42,9 @@ include_directories (
         ./ml_trainer
 )
 
-add_executable(decisiontreeclassifier ${MAIN_SOURCE_FILE} ${DIR_SRCS})
+add_executable(kmeansCluster ${MAIN_SOURCE_FILE} ${DIR_SRCS})
 
-target_link_libraries(decisiontreeclassifier
+target_link_libraries(kmeansCluster
         ${OpenCV_LIBS}
         libboost_regex.so
         libboost_filesystem.so

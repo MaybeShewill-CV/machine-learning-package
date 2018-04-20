@@ -29,7 +29,7 @@ void DataLoder::load_data_from_txt(const std::string &txt_path,
         input_file.getline(buffer, 1000);
         std::stringstream inputstream(buffer);
         double feats = 0.0;
-        if (buffer != "\n") {
+        if (strcmp(buffer, "\n") != 0) {
             std::vector<double> tmp;
             while (inputstream >> feats) {
                 tmp.push_back(feats);

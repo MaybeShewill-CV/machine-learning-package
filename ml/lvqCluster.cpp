@@ -218,7 +218,7 @@ bool lvqCluster::update_cluster(const Eigen::MatrixXd &X, const Eigen::MatrixXd 
          cv::imshow("原始数据分布图", origin_image);
          cv::imshow("更新前的数据分布", before_update_image);
          cv::imshow("更新后的数据分布", after_update_image);
-         cv::waitKey(50);
+         cv::waitKey(500);
 #endif
          return true;
      } else {

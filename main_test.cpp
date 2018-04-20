@@ -10,7 +10,7 @@
 #include <logisticClassifierTrainer.h>
 #include <decisionTreeClassiferTrainer.h>
 #include <kmeansClusterTrainer.h>
-#include <lvqCluster.h>
+#include <lvqClusterTrainer.h>
 
 //#define TEST
 //#define DATALOADER_TEST
@@ -109,9 +109,10 @@ int main(int argc, char **argv) {
         LOG(INFO) << "./lvqCluster lvq训练数据 lvq测试数据 lvq验证数据" << std::endl;
         return -1;
     }
-    lvqCluster cluster(5, 0.0, EUCLIDEAN, 1000, 0.1);
-
-    cluster.test();
+    lvqClusterTrainer clusterTrainer(5, 1000, 0.1);
+    clusterTrainer.train(argv[1]);
+    clusterTrainer.test(argv[2]);
+    clusterTrainer.deploy(argv[3]);
 #endif
 
 #ifdef TEST

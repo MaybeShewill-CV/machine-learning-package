@@ -136,6 +136,13 @@ void lvqCluster::fit(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) {
             loop_time++;
         } else {
             LOG(INFO) << "迭代训练完毕" << std::endl;
+            cv::Mat origin_sample_distribution(500, 500, CV_8UC3);
+            cv::Mat cluster_prototype_distribution(500, 500, CV_8UC3);
+            lvqCluster_func::internal_func::vis_origin_feats_distribute(origin_sample_distribution, X, Y);
+            lvqCluster_func::internal_func::vis_prototype_vec(cluster_prototype_distribution, X, _cluster_vec);
+            cv::imshow("原始数据分布", origin_sample_distribution);
+            cv::imshow("lvq聚类原型向量分布", cluster_prototype_distribution);
+            cv::waitKey();
             break;
         }
     }
@@ -218,7 +225,7 @@ bool lvqCluster::update_cluster(const Eigen::MatrixXd &X, const Eigen::MatrixXd 
          cv::imshow("原始数据分布图", origin_image);
          cv::imshow("更新前的数据分布", before_update_image);
          cv::imshow("更新后的数据分布", after_update_image);
-         cv::waitKey(500);
+         cv::waitKey(250);
 #endif
          return true;
      } else {

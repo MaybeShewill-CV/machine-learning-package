@@ -10,6 +10,7 @@
 #include <logisticClassifierTrainer.h>
 #include <decisionTreeClassiferTrainer.h>
 #include <kmeansClusterTrainer.h>
+#include <lvqCluster.h>
 
 //#define TEST
 //#define DATALOADER_TEST
@@ -17,7 +18,8 @@
 //#define KNNCLASSIFIER_TEST
 //#define LOGISTICCLASSIFIER_TEST
 //#define DECISIONTREE_TEST
-#define KMEANS_TEST
+//#define KMEANS_TEST
+#define LVQ_TEST
 
 int main(int argc, char **argv) {
 
@@ -98,7 +100,18 @@ int main(int argc, char **argv) {
 
     clusterTrainer.train(argv[1]);
     clusterTrainer.test(argv[2]);
-//    clusterTrainer.deploy(argv[3]);
+    clusterTrainer.deploy(argv[3]);
+#endif
+
+#ifdef LVQ_TEST
+    if (argc != 4) {
+        LOG(INFO) << "Usage: " << std::endl;
+        LOG(INFO) << "./lvqCluster lvq训练数据 lvq测试数据 lvq验证数据" << std::endl;
+        return -1;
+    }
+    lvqCluster cluster(5, 0.0, EUCLIDEAN, 1000, 0.1);
+
+    cluster.test();
 #endif
 
 #ifdef TEST
@@ -107,10 +120,11 @@ int main(int argc, char **argv) {
     Eigen::MatrixXd matrix2(2, 2);
     matrix2 << 5, 6, 7, 8;
     LOG(INFO) << matrix1 << matrix2 << std::endl;
-    Eigen::RowVectorXd rowvector(2);
-    rowvector << 1;
-    rowvector << 2;
-    LOG(INFO) << rowvector << " " << rowvector.rows() << " " << rowvector.cols() << std::endl;
+    Eigen::RowVectorXd rowvector(4);
+    rowvector << 1, 2, 3, 4;
+    Eigen::RowVectorXd rowvector2(4);
+    rowvector2 << 2, 3, 4, 5;
+    LOG(INFO) << "Rowvector diff is " << rowvector2 - rowvector << std::endl;
 
     LOG(INFO) << "Matrix1 col 1: " << matrix1.col(0) << std::endl;
     LOG(INFO) << "Matrix2 col 1: " << matrix2.col(0) << std::endl;

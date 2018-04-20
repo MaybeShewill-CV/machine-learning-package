@@ -13,33 +13,7 @@
 #include <map>
 #include <vector>
 
-const double WRONG_LABEL = -9999.0;
-
-enum DISTANCE_TYPE {
-    EUCLIDEAN,
-    COSINE
-};
-
-class cluster {
-public:
-    cluster() = default;
-    ~cluster() = default;
-
-    cluster(const Eigen::MatrixXd &sample_feats_matrix, const Eigen::MatrixXd &label_matrix);
-    cluster& operator = (const cluster &other);
-
-    double get_cluster_label() {return _cluster_label;};
-    Eigen::RowVectorXd get_cluster_mean_feats_vec() {return _mean_feats_vec;};
-    Eigen::MatrixXd get_sample_feats_matrix() {return _sample_feats_matrix;};
-
-    // 更新簇(更新簇标签和簇中心向量)
-    bool is_cluster_updated(const Eigen::MatrixXd &sample_feats_matrix, const Eigen::MatrixXd &label_matrix);
-
-private:
-    double _cluster_label = WRONG_LABEL;
-    Eigen::RowVectorXd _mean_feats_vec;
-    Eigen::MatrixXd _sample_feats_matrix;
-};
+#include <cluster.h>
 
 class kmeansCluster : public MLBase {
 public:
@@ -58,7 +32,7 @@ private:
     int _class_nums = 2;
     int _max_loop_times = 1000;
     double _dist_threshold = 0.0;
-    DISTANCE_TYPE _distanceType;
+    DISTANCE_TYPE _distanceType = EUCLIDEAN;
     std::vector<cluster> _cluster_vec;
 
     // 预测一个实例

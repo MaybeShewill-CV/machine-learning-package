@@ -43,7 +43,7 @@ namespace internal_func {
         }
     }
 
-    void draw_cross(cv::Mat &image, cv::Point &cross_center, int line_length, cv::Scalar &color) {
+    void draw_cross(cv::Mat &image, cv::Point &cross_center, int line_length, const cv::Scalar &color) {
         cv::Point top;
         cv::Point bottom;
         cv::Point left;
@@ -151,7 +151,7 @@ double kmeansCluster::predict_one_sample(const Eigen::RowVectorXd &feats) {
 
 void kmeansCluster::init_kmeans_cluster(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) {
     // 设置随机数生成引擎
-    std::default_random_engine e(static_cast<u_long >(time(0)));
+    std::default_random_engine e(static_cast<u_long >(time(nullptr)));
     std::uniform_int_distribution<unsigned> u(0, static_cast<unsigned>(X.rows() - 1));
 
     std::vector<uint> random_index_vec;

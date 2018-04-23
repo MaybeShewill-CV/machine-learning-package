@@ -168,10 +168,8 @@ double gmmCluster::predict_one_smaple(const Eigen::RowVectorXd &input) {
 void gmmCluster::init_gmm_cluster(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) {
     // 初始化簇向量
     // TODO 检查高斯混合模型初始化过程是否正确
-//    std::vector<long> random_index_vec = {5, 21, 26};
     for (auto i = 0; i < _class_nums; ++i) {
         std::uniform_int_distribution<long > u(0, X.rows() - 1);
-//        auto random_index = random_index_vec[i];
         auto random_index = u(gmmCluster_internal::E);
         gmm_cluster cluster_tmp(X.row(random_index), 1.0 / _class_nums);
         _cluster_vec.push_back(cluster_tmp);
@@ -194,7 +192,7 @@ Eigen::MatrixXd gmmCluster::compute_gmm_posterior_prob_matrix(const Eigen::Matri
         }
 
         for (auto j = 0; j < _class_nums; ++j) {
-            posterior_prob_matrix(i, j) = prob_density_vec[j] / prob_density_sum;
+            posterior_prob_matrix(i, j) = prob_density_vec[j] / (prob_density_sum + 0.000000001);
         }
     }
     return posterior_prob_matrix;

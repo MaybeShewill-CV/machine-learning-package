@@ -23,8 +23,6 @@ public:
 
     std::vector<gmm_cluster> get_cluster_vec() {return _cluster_vec;};
 
-    void test();
-
 private:
     int _class_nums = 2;
     int _max_item_times = 1000;

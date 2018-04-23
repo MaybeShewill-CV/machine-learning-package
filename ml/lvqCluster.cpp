@@ -277,23 +277,3 @@ double lvqCluster::calculate_distance(const Eigen::RowVectorXd &vectorXd_1,
     }
     return distance;
 }
-
-void lvqCluster::test() {
-    Eigen::MatrixXd X(30, 2);
-    Eigen::MatrixXd Y(30, 1);
-    X << 0.697, 0.460, 0.774, 0.376, 0.634, 0.264, 0.608, 0.318, 0.556, 0.215, 0.403, 0.237, 0.481, 0.149, 0.437,
-            0.211, 0.666, 0.091, 0.243, 0.267, 0.245, 0.057, 0.343, 0.099, 0.639, 0.161, 0.657, 0.198, 0.360, 0.370,
-            0.593, 0.042, 0.719, 0.103, 0.359, 0.188, 0.339, 0.241, 0.282, 0.257, 0.748, 0.232, 0.714, 0.346, 0.483,
-            0.312, 0.478, 0.437, 0.525, 0.369, 0.751, 0.489, 0.532, 0.472, 0.473, 0.376, 0.725, 0.445, 0.446, 0.459;
-    Y << 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1;
-
-    fit(X, Y);
-
-    Eigen::MatrixXd ret;
-    predict(X, ret);
-    LOG(INFO) << "预测结果如下: " << std::endl;
-    LOG(INFO) << ret << std::endl;
-    auto diff = Y - ret;
-    auto correct_prediction = (diff.array() == 0).count();
-    LOG(INFO) << "预测准确率: " << static_cast<double>(correct_prediction) / Y.rows() << std::endl;
-}

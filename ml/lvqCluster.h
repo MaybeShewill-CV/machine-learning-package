@@ -23,8 +23,6 @@ public:
     void fit(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) override ;
     void predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) override ;
 
-    void test();
-
     std::vector<lvq_cluster> get_cluster_vec() {return _cluster_vec;};
 
 private:

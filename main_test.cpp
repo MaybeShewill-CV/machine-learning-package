@@ -11,6 +11,7 @@
 #include <decisionTreeClassiferTrainer.h>
 #include <kmeansClusterTrainer.h>
 #include <lvqClusterTrainer.h>
+#include <gmmClusterTrainer.h>
 
 //#define TEST
 //#define DATALOADER_TEST
@@ -19,7 +20,8 @@
 //#define LOGISTICCLASSIFIER_TEST
 //#define DECISIONTREE_TEST
 //#define KMEANS_TEST
-#define LVQ_TEST
+//#define LVQ_TEST
+#define GMM_TEST
 
 int main(int argc, char **argv) {
 
@@ -115,12 +117,24 @@ int main(int argc, char **argv) {
     clusterTrainer.deploy(argv[3]);
 #endif
 
+#ifdef GMM_TEST
+    if (argc != 4) {
+        LOG(INFO) << "Usage: " << std::endl;
+        LOG(INFO) << "./gmmCluster gmm训练数据 gmm测试数据 gmm验证数据" << std::endl;
+        return -1;
+    }
+    gmmClusterTrainer clusterTrainer(5, 250);
+    clusterTrainer.train(argv[1]);
+    clusterTrainer.test(argv[2]);
+    clusterTrainer.deploy(argv[3]);
+#endif
+
 #ifdef TEST
-    Eigen::MatrixXd matrix1(2, 2);
-    matrix1 << 1, 2, 3, 4;
-    Eigen::MatrixXd matrix2(2, 2);
-    matrix2 << 5, 6, 7, 8;
-    LOG(INFO) << matrix1 << matrix2 << std::endl;
+    Eigen::MatrixXd matrix1(1, 2);
+    matrix1 << 1, 2;
+    Eigen::MatrixXd matrix2(2, 1);
+    matrix2 << 5, 6;
+    LOG(INFO) << matrix1 * matrix2 << std::endl;
     Eigen::RowVectorXd rowvector(4);
     rowvector << 1, 2, 3, 4;
     Eigen::RowVectorXd rowvector2(4);

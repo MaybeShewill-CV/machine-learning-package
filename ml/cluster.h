@@ -61,4 +61,39 @@ private:
     Eigen::RowVectorXd _prototype_vec;
 };
 
+class gmm_cluster {
+public:
+    gmm_cluster() = default;
+    ~gmm_cluster() = default;
+
+    gmm_cluster(const Eigen::MatrixXd &sample_matrixXd, double gmm_mix_coefficient);
+
+    // 获取高斯混合模型参数
+    double get_gmm_mix_coefficient() {return _gmm_mix_coefficient;};
+    // 获取高斯模型均值向量
+    Eigen::RowVectorXd get_mean_vec() {return _mean_vectorXd;};
+    // 计算向量概率密度
+    double compute_prob_density(const Eigen::RowVectorXd &input_vec);
+    // 更新高斯聚类簇
+    bool update_gmm_cluster(const Eigen::RowVectorXd &mean_vectorXd,
+                            const Eigen::MatrixXd &covariance_matrix,
+                            double gmm_mix_coefficient);
+    // 给高斯聚类簇赋标签
+    void set_cluster_label(double label) {_label = label;};
+    // 获取高斯聚类簇标签
+    double get_cluster_label() {return _label;};
+
+private:
+    Eigen::MatrixXd _sample_matrixXd;
+    Eigen::RowVectorXd _mean_vectorXd;
+    Eigen::MatrixXd _covariance_matrixXd;
+    double _gmm_mix_coefficient = 1.0;
+    double _label = WRONG_LABEL;
+
+    // 计算协方差矩阵
+    Eigen::MatrixXd compute_covariance_matrix(const Eigen::MatrixXd &input);
+
+};
+
+
 #endif //MACHINE_LEARNING_PACKAGE_CLUSTER_H

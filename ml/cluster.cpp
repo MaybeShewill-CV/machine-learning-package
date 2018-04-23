@@ -8,6 +8,7 @@
 #include "cluster.h"
 
 #include <map>
+#include <glog/logging.h>
 
 #include <globalUtils.h>
 
@@ -118,6 +119,64 @@ bool lvq_cluster::is_cluster_updated(const Eigen::RowVectorXd &diff_prototype_ve
         return false;
     } else {
         _prototype_vec = updated_prototype_vec;
+        return true;
+    }
+}
+
+gmm_cluster::gmm_cluster(const Eigen::MatrixXd &sample_matrixXd, double gmm_mix_coeffiecient) :
+        _gmm_mix_coefficient(gmm_mix_coeffiecient) {
+    // 初始化特征空间
+    _sample_matrixXd = sample_matrixXd;
+    // 初始化均值向量
+    _mean_vectorXd = _sample_matrixXd.colwise().mean();
+    // 初始化协方差矩阵
+    _covariance_matrixXd = compute_covariance_matrix(_sample_matrixXd);
+}
+
+double gmm_cluster::compute_prob_density(const Eigen::RowVectorXd &input_vec) {
+    auto sample_nums = _sample_matrixXd.rows();
+    auto tmp = (input_vec - _mean_vectorXd) * _covariance_matrixXd.inverse()
+               * (input_vec - _mean_vectorXd).transpose();
+    assert(tmp.rows() == 1 && tmp.cols() == 1);
+    double molecular = std::exp(-0.5 * tmp(0, 0));
+    double denominator = std::pow(2 * M_PI, static_cast<double>(sample_nums / 2))
+                         * std::sqrt(_covariance_matrixXd.determinant());
+    return molecular / denominator;
+}
+
+Eigen::MatrixXd gmm_cluster::compute_covariance_matrix(const Eigen::MatrixXd &input) {
+    // 如果输入是行向量,则返回单位矩阵
+    if (input.rows() == 1) {
+        auto feat_dims = input.cols();
+        Eigen::MatrixXd covMat = Eigen::MatrixXd::Identity(feat_dims, feat_dims) / 10;
+        return covMat;
+    }
+
+    Eigen::MatrixXd meanVec = input.colwise().mean();
+    Eigen::RowVectorXd meanVecRow(Eigen::RowVectorXd::Map(meanVec.data(),input.cols()));
+
+    Eigen::MatrixXd zeroMeanMat = input;
+    zeroMeanMat.rowwise() -= meanVecRow;
+    Eigen::MatrixXd covMat;
+
+    if(input.rows()==1) {
+        covMat = (zeroMeanMat.adjoint() * zeroMeanMat) / static_cast<double>((input.rows()));
+    } else {
+        covMat = (zeroMeanMat.adjoint()*zeroMeanMat) / static_cast<double>((input.rows()-1));
+    }
+
+    return covMat;
+}
+
+bool gmm_cluster::update_gmm_cluster(const Eigen::RowVectorXd &mean_vectorXd,
+                                     const Eigen::MatrixXd &covariance_matrixXd,
+                                     double gmm_mix_coefficient) {
+    if (mean_vectorXd == _mean_vectorXd || covariance_matrixXd == _covariance_matrixXd) {
+        return false;
+    } else {
+        _mean_vectorXd = mean_vectorXd;
+        _covariance_matrixXd = covariance_matrixXd;
+        _gmm_mix_coefficient = gmm_mix_coefficient;
         return true;
     }
 }

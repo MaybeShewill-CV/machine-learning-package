@@ -43,7 +43,49 @@ namespace internal_func {
         }
     }
 
-    void vis_feats(const cv::Mat &image, const Eigen::MatrixXd &sample_feats_matrix, const cv::Scalar &color) {
+    void draw_cross(cv::Mat &image, cv::Point &cross_center, int line_length, cv::Scalar &color) {
+        cv::Point top;
+        cv::Point bottom;
+        cv::Point left;
+        cv::Point right;
+
+        if (cross_center.y - line_length / 2 < 0) {
+            top.x = cross_center.x;
+            top.y = 0;
+        } else {
+            top.x = cross_center.x;
+            top.y = cross_center.y - line_length / 2;
+        }
+        if (cross_center.y + line_length / 2 > image.rows) {
+            bottom.x = cross_center.x;
+            bottom.y = image.rows - 1;
+        } else {
+            bottom.x = cross_center.x;
+            bottom.y = cross_center.y + line_length / 2;
+        }
+        if (cross_center.x - line_length / 2 < 0) {
+            left.x = 0;
+            left.y = cross_center.y;
+        } else {
+            left.x = cross_center.x - line_length / 2;
+            left.y = cross_center.y;
+        }
+        if (cross_center.x + line_length / 2 > image.cols) {
+            right.x = image.cols;
+            right.y = cross_center.y;
+        } else {
+            right.x = cross_center.x + line_length / 2;
+            right.y = cross_center.y;
+        }
+
+        cv::line(image, top, bottom, color, 2);
+        cv::line(image, left, right, color, 2);
+    }
+
+    void vis_feats(cv::Mat &image, const Eigen::MatrixXd &sample_feats_matrix, const cv::Scalar &color) {
+        Eigen::RowVectorXd mean_vec = sample_feats_matrix.colwise().mean();
+        cv::Point center(static_cast<int>(mean_vec(0, 0) * 500), static_cast<int>(mean_vec(0, 1) * 500));
+        draw_cross(image, center, 40, color);
         for (auto i = 0; i < sample_feats_matrix.rows(); ++i) {
             auto pt_x = static_cast<int>(sample_feats_matrix(i, 0) * 500);
             auto pt_y = 500 - static_cast<int>(sample_feats_matrix(i, 1) * 500);

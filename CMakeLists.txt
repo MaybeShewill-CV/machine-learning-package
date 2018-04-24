@@ -42,9 +42,9 @@ include_directories (
         ./ml_trainer
 )
 
-add_executable(gmmCluster ${MAIN_SOURCE_FILE} ${DIR_SRCS})
+add_executable(dbscanCluster ${MAIN_SOURCE_FILE} ${DIR_SRCS})
 
-target_link_libraries(gmmCluster
+target_link_libraries(dbscanCluster
         ${OpenCV_LIBS}
         libboost_regex.so
         libboost_filesystem.so

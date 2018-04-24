@@ -12,6 +12,7 @@
 #include <kmeansClusterTrainer.h>
 #include <lvqClusterTrainer.h>
 #include <gmmClusterTrainer.h>
+#include <dbscanClusterTrainer.h>
 
 //#define TEST
 //#define DATALOADER_TEST
@@ -21,7 +22,8 @@
 //#define DECISIONTREE_TEST
 //#define KMEANS_TEST
 //#define LVQ_TEST
-#define GMM_TEST
+//#define GMM_TEST
+#define DBSCAN_TEST
 
 int main(int argc, char **argv) {
 
@@ -124,6 +126,18 @@ int main(int argc, char **argv) {
         return -1;
     }
     gmmClusterTrainer clusterTrainer(5, 250);
+    clusterTrainer.train(argv[1]);
+    clusterTrainer.test(argv[2]);
+    clusterTrainer.deploy(argv[3]);
+#endif
+
+#ifdef DBSCAN_TEST
+    if (argc != 4) {
+        LOG(INFO) << "Usage: " << std::endl;
+        LOG(INFO) << "./gmmCluster gmm训练数据 gmm测试数据 gmm验证数据" << std::endl;
+        return -1;
+    }
+    dbscanClusterTrainer clusterTrainer(5, 0.11);
     clusterTrainer.train(argv[1]);
     clusterTrainer.test(argv[2]);
     clusterTrainer.deploy(argv[3]);

@@ -167,7 +167,6 @@ double gmmCluster::predict_one_smaple(const Eigen::RowVectorXd &input) {
 
 void gmmCluster::init_gmm_cluster(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) {
     // 初始化簇向量
-    // TODO 检查高斯混合模型初始化过程是否正确
     for (auto i = 0; i < _class_nums; ++i) {
         std::uniform_int_distribution<long > u(0, X.rows() - 1);
         auto random_index = u(gmmCluster_internal::E);

@@ -9,6 +9,7 @@
 #define MACHINE_LEARNING_PACKAGE_MLBASE_H
 
 #include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Core>
 
 class MLBase {
 public:

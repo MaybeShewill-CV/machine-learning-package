@@ -30,7 +30,8 @@ public:
     Eigen::MatrixXd get_sample_feats_matrix() {return _sample_feats_matrix;};
 
     // 更新簇(更新簇标签和簇中心向量)
-    bool is_cluster_updated(const Eigen::MatrixXd &sample_feats_matrix, const Eigen::MatrixXd &label_matrix);
+    bool is_cluster_updated(const Eigen::MatrixXd &sample_feats_matrix,
+                            const Eigen::MatrixXd &label_matrix);
 
 private:
     double _cluster_label = WRONG_LABEL;
@@ -93,6 +94,30 @@ private:
     // 计算协方差矩阵
     Eigen::MatrixXd compute_covariance_matrix(const Eigen::MatrixXd &input);
 
+};
+
+class dbscan_cluster {
+public:
+    dbscan_cluster() = default;
+    ~dbscan_cluster() = default;
+
+    dbscan_cluster(Eigen::RowVectorXd seed_feats_vec, Eigen::MatrixXd sample_matrix) :
+            _seed_feats_vec(std::move(seed_feats_vec)),
+            _sample_matrix(std::move(sample_matrix)){}
+
+    // 获取核心对象的特征向量
+    Eigen::RowVectorXd get_seed_feats() {return _seed_feats_vec;};
+    // 获取聚类簇成员
+    Eigen::MatrixXd get_sample_matrix() {return _sample_matrix;};
+    // 获取聚类簇标签
+    double get_cluster_label() {return _label;};
+    // 设置聚类簇标签
+    void set_cluster_label(double label) {_label = label;};
+
+private:
+    Eigen::RowVectorXd _seed_feats_vec;
+    Eigen::MatrixXd _sample_matrix;
+    double _label = WRONG_LABEL;
 };
 
 

@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <map>
+#include <set>
 #include <algorithm>
 
 class GlobalUtils {
@@ -35,7 +36,12 @@ public:
     };
 
     template <typename T>
-    static bool has_elements(const std::vector<T> vec, const T& ele_val) {
+    static bool has_elements(const std::set<T> &set_tmp, const T &ele_val) {
+        return set_tmp.count(ele_val) > 0;
+    }
+
+    template <typename T>
+    static bool has_elements(const std::vector<T> &vec, const T &ele_val) {
         for (auto &ele : vec) {
             if (ele == ele_val) {
                 return true;

@@ -42,12 +42,13 @@ include_directories (
         ./ml_trainer
 )
 
-add_executable(dbscanCluster ${MAIN_SOURCE_FILE} ${DIR_SRCS})
+add_executable(nnClassifier ${MAIN_SOURCE_FILE} ${DIR_SRCS})
 
-target_link_libraries(dbscanCluster
+target_link_libraries(nnClassifier
         ${OpenCV_LIBS}
         libboost_regex.so
         libboost_filesystem.so
         libboost_system.so
         libglog.so
+        /usr/lib/openblas-base/libblas.so.3
         )

@@ -6,6 +6,7 @@
 ************************************************/
 
 #include "mlpClassifier.h"
+#include "nnLayer.h"
 
 #include <glog/logging.h>
 
@@ -19,11 +20,11 @@ mlpClassifier::mlpClassifier(const int class_nums, const int max_iter_times,
         _lr(lr), _batch_size(batch_size){
     // 初始化mlp网络结构
     mlp_layer.push_back(new linearTransformLayer(input_dims, 256, _batch_size));
-    mlp_layer.push_back(new reluLayer(256, 256, _batch_size));
+    mlp_layer.push_back(new sigmoidLayer(256, 256, _batch_size));
     mlp_layer.push_back(new linearTransformLayer(256, 256, _batch_size));
-    mlp_layer.push_back(new reluLayer(256, 256, _batch_size));
+    mlp_layer.push_back(new sigmoidLayer(256, 256, _batch_size));
     mlp_layer.push_back(new linearTransformLayer(256, 100, _batch_size));
-    mlp_layer.push_back(new reluLayer(100, 100, _batch_size));
+    mlp_layer.push_back(new sigmoidLayer(100, 100, _batch_size));
     mlp_layer.push_back(new linearTransformLayer(100, _class_nums, _batch_size));
     mlp_layer.push_back(new crossentropyLayer(_class_nums, _class_nums, _batch_size));
 }

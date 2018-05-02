@@ -80,6 +80,41 @@ private:
     double _relu_grad(double input) {return (input > 0) ? 1 : 0;};
 };
 
+class leakReluLayer : public nnLayer {
+public:
+    leakReluLayer() = default;
+    ~leakReluLayer() override = default;
+
+    leakReluLayer(int input_dims, int output_dims, int batch_size);
+
+    void forward() override ;
+    void backward() override ;
+    void resetGrads() override {};
+    void applyGrads(double lr) override {};
+
+private:
+    double _leak_relu(double input) {return (input > 0) ? input : 0.00001;};
+    double _leak_relu_grad(double input) {return (input > 0) ? 1 : 0;};
+};
+
+class sigmoidLayer : public  nnLayer {
+public:
+    sigmoidLayer() = default;
+    ~sigmoidLayer() override = default;
+
+    sigmoidLayer(int input_dims, int output_dims, int batch_size);
+
+    void forward() override ;
+    void backward() override ;
+    void resetGrads() override {};
+    void applyGrads(double lr) override {};
+
+private:
+    double _sigmoid(double input) {return 1.0 / (1.0 + std::exp(-input));};
+    double _sigmoid_grad(double input) {return 1.0 - _sigmoid(input);};
+
+};
+
 // 测试使用 所以没有backward接口
 class softmaxLayer : public nnLayer {
 public:

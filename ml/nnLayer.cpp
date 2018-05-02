@@ -124,6 +124,58 @@ void reluLayer::backward() {
     _dx = relu_grad.array() * _dy.array();
 }
 
+leakReluLayer::leakReluLayer(int input_dims, int output_dims, int batch_size) :
+        nnLayer(input_dims, output_dims, batch_size){}
+
+void leakReluLayer::forward() {
+    Eigen::MatrixXd ret(_x.rows(), _x.cols());
+    for (auto i = 0; i < _x.rows(); ++i) {
+        for (auto j = 0; j < _x.cols(); ++j) {
+            ret(i, j) = _leak_relu(_x(i, j));
+        }
+    }
+    _y = ret;
+}
+
+void leakReluLayer::backward() {
+    Eigen::MatrixXd leak_relu_grad(_y.rows(), _y.cols());
+    for (auto i = 0; i < _y.rows(); ++i) {
+        for (auto j =0; j < _y.cols(); ++j) {
+            leak_relu_grad(i, j) = _leak_relu_grad(_y(i, j));
+        }
+    }
+    _dx = leak_relu_grad.array() * _dy.array();
+}
+
+sigmoidLayer::sigmoidLayer(int input_dims, int output_dims, int batch_size) :
+        nnLayer(input_dims, output_dims, batch_size){}
+
+void sigmoidLayer::forward() {
+    Eigen::MatrixXd ret(_x.rows(), _x.cols());
+    for (auto i = 0; i < _x.rows(); ++i) {
+        for (auto j = 0; j < _x.cols(); ++j) {
+            ret(i, j) = _sigmoid(_x(i, j));
+        }
+    }
+#ifdef DEBUG
+    LOG(INFO) << "sigmoid输入: " << _x << std::endl;
+#endif
+    _y = ret;
+#ifdef DEBUG
+    LOG(INFO) << "sigmoid输出: " << _y << std::endl;
+#endif
+}
+
+void sigmoidLayer::backward() {
+    Eigen::MatrixXd sigmoid_grad(_y.rows(), _y.cols());
+    for (auto i = 0; i < _y.rows(); ++i) {
+        for (auto j =0; j < _y.cols(); ++j) {
+            sigmoid_grad(i, j) = _sigmoid_grad(_y(i, j));
+        }
+    }
+    _dx = sigmoid_grad.array() * _dy.array();
+}
+
 softmaxLayer::softmaxLayer(int input_dims, int output_dims, int batch_size) :
         nnLayer(input_dims, output_dims, batch_size){
 

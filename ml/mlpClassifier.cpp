@@ -28,6 +28,26 @@ mlpClassifier::mlpClassifier(const int class_nums, const int max_iter_times,
     mlp_layer.push_back(new crossentropyLayer(_class_nums, _class_nums, _batch_size));
 }
 
+mlpClassifier& mlpClassifier::operator=(const mlpClassifier &other) {
+    // 检查自赋值
+    if (this != &other) {
+        this->_class_nums = other._class_nums;
+        this->_batch_size = other._batch_size;
+        this->_max_iter_times = other._max_iter_times;
+        this->_lr = other._lr;
+        this->mlp_layer = other.mlp_layer;
+    }
+    return *this;
+}
+
+mlpClassifier::~mlpClassifier() {
+//    for (auto &layer : mlp_layer) {
+//        delete(layer);
+//    }
+    mlp_layer.clear();
+    std::deque<nnLayer*>().swap(mlp_layer);
+}
+
 void mlpClassifier::fit(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) {
     // one_hot编码标签
     Eigen::MatrixXd one_hot_label = one_hot_encode(Y);
@@ -39,7 +59,14 @@ void mlpClassifier::fit(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) {
 }
 
 void mlpClassifier::predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) {
-
+    Eigen::MatrixXd softmax_out = mlp_forward(X);
+    Eigen::MatrixXd ret(X.rows(), 1);
+    for (auto row = 0; row < softmax_out.rows(); ++row) {
+        Eigen::Index row_idx, col_idx;
+        softmax_out.row(row).maxCoeff(&row_idx, &col_idx);
+        ret(row, 0) = static_cast<double>(col_idx);
+    }
+    RET = ret;
 }
 
 void mlpClassifier::fit_one_epoch(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y,
@@ -125,11 +152,12 @@ Eigen::MatrixXd mlpClassifier::mlp_forward(const Eigen::MatrixXd &X) {
         mlp_layer[layer_index]->forward();
         mlp_layer[layer_index + 1]->_x = mlp_layer[layer_index]->_y;
     }
-    Eigen::MatrixXd mlp_logits = mlp_layer[mlp_layer.size() - 1]->_y;
+    Eigen::MatrixXd mlp_logits = mlp_layer[mlp_layer.size() - 2]->_y;
     softmaxLayer softmax_layer(static_cast<int>(mlp_logits.cols()),
                                _class_nums,
                                static_cast<int>(mlp_logits.rows()));
-    softmax_layer._x = mlp_logits;
+    // softmax输出
+    softmax_layer._x = mlp_logits.transpose();
     softmax_layer.forward();
     return softmax_layer._y;
 }
@@ -162,21 +190,4 @@ void mlpClassifier::mlp_backward_update(const Eigen::MatrixXd &Y) {
 #endif
         }
     }
-}
-
-void mlpClassifier::test() {
-    mnist_dataloder loder;
-    auto mnist_data = loder.load_mnist("../data/mnist/train-images-idx3-ubyte",
-                                       "../data/mnist/train-labels-idx1-ubyte");
-    LOG(INFO) << "加载" << mnist_data.size() << "条mnist数据集" << std::endl;
-    Eigen::MatrixXd X(mnist_data.size(), 28*28);
-    Eigen::MatrixXd Y(mnist_data.size(), 1);
-    for (size_t i = 0; i < mnist_data.size(); ++i) {
-        for (auto j = 0; j < mnist_data[i].first.rows(); ++j) {
-            X(i, j) = mnist_data[i].first(j, 0);
-        }
-        Y(i, 0) = mnist_data[i].second;
-    }
-
-    fit(X, Y);
 }

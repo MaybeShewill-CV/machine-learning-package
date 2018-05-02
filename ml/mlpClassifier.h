@@ -17,14 +17,16 @@
 class mlpClassifier : public MLBase {
 public:
     mlpClassifier() = default;
-    ~mlpClassifier() override = default;
+    ~mlpClassifier() override;
+
+    mlpClassifier& operator = (const mlpClassifier &other);
 
     mlpClassifier(int class_nums, int max_iter_times, double lr, int batch_size, int input_dims);
 
     void fit(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y) override ;
     void predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) override ;
 
-    void test();
+    std::deque<nnLayer*> get_mlp_layer() {return mlp_layer;};
 
 private:
     int _class_nums = 0;
@@ -48,6 +50,5 @@ private:
     void mlp_backward_update(const Eigen::MatrixXd &Y);
 
 };
-
 
 #endif //MACHINE_LEARNING_PACKAGE_MLPCLASSIFIER_H

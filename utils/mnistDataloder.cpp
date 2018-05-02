@@ -54,7 +54,7 @@ std::vector<mnist_sample> mnist_dataloder::load_mnist(const std::string &mnist_f
                     fflush(stdout);
                 }
 
-                for (auto i = 0; i < w * h; i++) {
+                for (size_t i = 0; i < w * h; i++) {
                     temp(i) = (double)((uint8_t)buffer[i]) / 255.0f;
                 }
 

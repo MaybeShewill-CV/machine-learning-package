@@ -13,8 +13,7 @@
 #include <lvqClusterTrainer.h>
 #include <gmmClusterTrainer.h>
 #include <dbscanClusterTrainer.h>
-#include <nnLayer.h>
-#include <mlpClassifier.h>
+#include <mlpClassifierTrainer.h>
 
 //#define TEST
 //#define DATALOADER_TEST
@@ -26,7 +25,7 @@
 //#define LVQ_TEST
 //#define GMM_TEST
 //#define DBSCAN_TEST
-#define NNCLASSIFIER_TEST
+#define MLPCLASSIFIER_TEST
 
 int main(int argc, char **argv) {
 
@@ -146,14 +145,15 @@ int main(int argc, char **argv) {
     clusterTrainer.deploy(argv[3]);
 #endif
 
-#ifdef NNCLASSIFIER_TEST
+#ifdef MLPCLASSIFIER_TEST
     if (argc != 4) {
         LOG(INFO) << "Usage: " << std::endl;
-        LOG(INFO) << "./nnClassifier nn训练数据 nn测试数据 nn验证数据" << std::endl;
+        LOG(INFO) << "./mlpClassifier mlp训练数据 mlp测试数据 mlp验证数据" << std::endl;
         return -1;
     }
-    mlpClassifier classifier(10, 100, 0.0001, 250, 28 * 28);
-    classifier.test();
+    mlpClassifierTrainer trainer(10, 0.001, 5, 250, 28 * 28);
+    trainer.train(argv[1]);
+    trainer.test(argv[2]);
 #endif
 
 #ifdef TEST

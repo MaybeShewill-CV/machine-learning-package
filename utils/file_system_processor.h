@@ -17,9 +17,9 @@
 
 class FileSystemProcessor {
 public:
-    FileSystemProcessor() {};
+    FileSystemProcessor() = default;
 
-    ~FileSystemProcessor() {};
+    ~FileSystemProcessor() = default;
 
     enum SEARCH_OPTION_T {
         TOPDIRECTORYONLY = 1,
@@ -85,6 +85,9 @@ public:
 
     // 拷贝文件夹
     static bool copy_directory(const std::string &src_dir, const std::string &dst_dir);
+
+    // 拼接文件路径
+    static std::string combine_path(const std::string &path_1, const std::string &path_2);
 
     // 转换大写
     static void to_upper(std::string &_str);

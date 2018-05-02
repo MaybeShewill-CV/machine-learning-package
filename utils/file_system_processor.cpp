@@ -190,3 +190,8 @@ bool FileSystemProcessor::copy_directory(const std::string &source,
     }
     return true;
 }
+
+std::string FileSystemProcessor::combine_path(const std::string &path_1, const std::string &path_2) {
+    boost::filesystem::path p_1(path_1);
+    return (p_1 /= path_2).string();
+}

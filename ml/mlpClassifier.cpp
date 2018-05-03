@@ -6,11 +6,8 @@
 ************************************************/
 
 #include "mlpClassifier.h"
-#include "nnLayer.h"
 
 #include <glog/logging.h>
-
-#include <mnistDataloder.h>
 
 //#define DEBUG
 
@@ -42,6 +39,7 @@ mlpClassifier& mlpClassifier::operator=(const mlpClassifier &other) {
 }
 
 mlpClassifier::~mlpClassifier() {
+//    TODO 修改析构函数bug
 //    for (auto &layer : mlp_layer) {
 //        delete(layer);
 //    }

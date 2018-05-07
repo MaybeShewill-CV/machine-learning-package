@@ -10,6 +10,7 @@
 #include <ctime>
 
 #include <glog/logging.h>
+#include <opencv2/opencv.hpp>
 
 #define DEBUG
 
@@ -238,8 +239,8 @@ void svmClassifier::init_lagrangian_mul_coffecient(const Eigen::MatrixXd &Y) {
     auto dot_sum = mul_coffecient.dot(Y.col(0));
     LOG(INFO) << "拉格朗日乘常数约束检查值为: " << dot_sum << std::endl;
 #endif
-//    _lagrangian_mul_coffecient = mul_coffecient;
-    _lagrangian_mul_coffecient = Eigen::VectorXd::Zero(Y.rows());
+    _lagrangian_mul_coffecient = mul_coffecient;
+//    _lagrangian_mul_coffecient = Eigen::VectorXd::Zero(Y.rows());
 }
 
 double svmClassifier::compute_H(const Eigen::MatrixXd &Y, const int index_1, const int index_2) {

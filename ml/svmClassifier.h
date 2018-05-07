@@ -10,6 +10,8 @@
 
 #include <MLBase.h>
 
+#include <stack>
+
 enum KERNEL_TYPE {
     LINEAR,
     POLYNOMIAL,
@@ -38,6 +40,7 @@ private:
     KERNEL_TYPE _kernelType = RBF;
     Eigen::MatrixXd _x;
     Eigen::MatrixXd _y;
+    std::stack<bool> _process_status_stack;
 
     // 初始化拉格朗日乘常数
     void init_lagrangian_mul_coffecient(const Eigen::MatrixXd &Y);
@@ -51,6 +54,8 @@ private:
     double inner_product(const Eigen::VectorXd &input_1, const Eigen::VectorXd &input_2);
     // smo参数优化
     void simplified_smo(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y);
+    // smo参数优化终止条件
+    bool terminate_smo();
     // 核函数
     double linear_kernel_func(const Eigen::VectorXd &input_1, const Eigen::VectorXd &input_2);
     double polynomial_kernel_func(const Eigen::VectorXd &input_1, const Eigen::VectorXd &input_2, int d);

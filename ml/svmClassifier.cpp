@@ -16,6 +16,13 @@
 
 namespace svm_internal {
     std::default_random_engine E(time(nullptr));
+
+    template <class T>
+    void clear_stack(std::stack<T> _stack) {
+        while (!_stack.empty()) {
+            _stack.pop();
+        }
+    }
 }
 
 svmClassifier::svmClassifier(const int iter_times, const double C, const double tol,
@@ -51,7 +58,10 @@ void svmClassifier::simplified_smo(const Eigen::MatrixXd &X,
                                    const Eigen::MatrixXd &Y) {
     auto loop_times = 0;
     auto loop_times_2 = 1;
-    while (loop_times < _max_iter_times) {
+    if (!_process_status_stack.empty()) {
+        svm_internal::clear_stack(_process_status_stack);
+    }
+    while (loop_times < _max_iter_times && !terminate_smo()) {
         auto changed_alpha_nums = 0;
         for (auto i = 0; i < X.rows(); ++i) {
             auto error_i = forward_train(X, Y, X.row(i)) - Y(i, 0);
@@ -79,6 +89,7 @@ void svmClassifier::simplified_smo(const Eigen::MatrixXd &X,
                     LOG(INFO) << "[Epoch/Iter]: " << "[" << loop_times_2 << "/" << i << "]:" << std::endl;
                     LOG(INFO) << "---参数未更新" << std::endl;
 #endif
+                    _process_status_stack.push(false);
                     continue;
                 }
                 Eigen::VectorXd sample_i = X.row(i);
@@ -90,6 +101,7 @@ void svmClassifier::simplified_smo(const Eigen::MatrixXd &X,
                     LOG(INFO) << "[Epoch/Iter]: " << "[" << loop_times_2 << "/" << i << "]:" << std::endl;
                     LOG(INFO) << "---参数未更新" << std::endl;
 #endif
+                    _process_status_stack.push(false);
                     continue;
                 }
                 auto a_j_clip = a_j;
@@ -105,6 +117,7 @@ void svmClassifier::simplified_smo(const Eigen::MatrixXd &X,
                     LOG(INFO) << "[Epoch/Iter]: " << "[" << loop_times_2 << "/" << i << "]:" << std::endl;
                     LOG(INFO) << "---参数未更新" << std::endl;
 #endif
+                    _process_status_stack.push(false);
                     continue;
                 }
                 auto s = y_i * y_j;
@@ -135,11 +148,13 @@ void svmClassifier::simplified_smo(const Eigen::MatrixXd &X,
                 LOG(INFO) << "---a_j_old: " << a_j << ", a_j_new: " << a_j_clip << std::endl;
                 LOG(INFO) << "---b_old: " << b_old << ", b_new: " << b << std::endl;
 #endif
+                _process_status_stack.push(true);
             } else {
 #ifdef DEBUG
                 LOG(INFO) << "[Epoch/Iter]: " << "[" << loop_times_2 << "/" << i << "]:" << std::endl;
                 LOG(INFO) << "---参数未更新" << std::endl;
 #endif
+                _process_status_stack.push(false);
             }
         }
         loop_times_2 += 1;
@@ -149,6 +164,24 @@ void svmClassifier::simplified_smo(const Eigen::MatrixXd &X,
             loop_times = 0;
         }
     }
+}
+
+bool svmClassifier::terminate_smo() {
+    if (_process_status_stack.empty()) {
+        return false;
+    }
+
+    // 连续20次没有进行参数更新则认为参数已经更新完毕,停止smo更新参数(这里可以调整smo更新终止策略)
+    bool terminate = true;
+    auto loop_times = _process_status_stack.size() >= 20 ? 20 : _process_status_stack.size();
+    while (loop_times--) {
+        if (_process_status_stack.top()) {
+            _process_status_stack.pop();
+        } else {
+            return false;
+        }
+    }
+    return terminate;
 }
 
 double svmClassifier::forward_train(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y,

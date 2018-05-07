@@ -26,6 +26,13 @@ void svmClassifierTrainer::train(const std::string &input_file_path) {
     Y = input_data.col(input_data.cols() - 1);
 
     _classifier.fit(X, Y);
+    auto support_vector_nums = 0;
+    for (auto i = 0; i < _classifier.get_lagrangian_mul_coffecient().rows(); ++i) {
+        if (std::abs(_classifier.get_lagrangian_mul_coffecient()(i)) >= 0.00000001) {
+            support_vector_nums += 1;
+        }
+    }
+    LOG(INFO) << "支持向量机训练完毕, 共获取" << support_vector_nums << "个支持向量" << std::endl;
 }
 
 void svmClassifierTrainer::test(const std::string &input_file_path) {

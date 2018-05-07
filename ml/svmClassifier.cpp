@@ -298,12 +298,3 @@ double svmClassifier::rbf_kernel_func(const Eigen::VectorXd &input_1,
     double gamma = 0.5;
     return std::exp(-gamma * diff_sum);
 }
-
-void svmClassifier::test() {
-    Eigen::MatrixXd Y(5, 1);
-    Y << 1, 1, -1, 1, -1;
-    init_lagrangian_mul_coffecient(Y);
-    LOG(INFO) << _lagrangian_mul_coffecient << std::endl;
-    LOG(INFO) << "上界是: " << compute_H(Y, 0, 1) << std::endl;
-    LOG(INFO) << "下界是: " << compute_L(Y, 0, 1) << std::endl;
-}

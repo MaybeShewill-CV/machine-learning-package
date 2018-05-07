@@ -29,8 +29,6 @@ public:
 
     Eigen::VectorXd get_lagrangian_mul_coffecient() {return _lagrangian_mul_coffecient;};
 
-    void test();
-
 private:
     double _bias = 0.0;
     Eigen::VectorXd _lagrangian_mul_coffecient;
@@ -53,7 +51,6 @@ private:
     double inner_product(const Eigen::VectorXd &input_1, const Eigen::VectorXd &input_2);
     // smo参数优化
     void simplified_smo(const Eigen::MatrixXd &X, const Eigen::MatrixXd &Y);
-
     // 核函数
     double linear_kernel_func(const Eigen::VectorXd &input_1, const Eigen::VectorXd &input_2);
     double polynomial_kernel_func(const Eigen::VectorXd &input_1, const Eigen::VectorXd &input_2, int d);

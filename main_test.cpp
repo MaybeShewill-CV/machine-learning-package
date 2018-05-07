@@ -14,6 +14,7 @@
 #include <gmmClusterTrainer.h>
 #include <dbscanClusterTrainer.h>
 #include <mlpClassifierTrainer.h>
+#include <svmClassifierTrainer.h>
 
 //#define TEST
 //#define DATALOADER_TEST
@@ -25,7 +26,8 @@
 //#define LVQ_TEST
 //#define GMM_TEST
 //#define DBSCAN_TEST
-#define MLPCLASSIFIER_TEST
+//#define MLPCLASSIFIER_TEST
+#define SVMCLASSIFIER
 
 int main(int argc, char **argv) {
 
@@ -152,6 +154,17 @@ int main(int argc, char **argv) {
         return -1;
     }
     mlpClassifierTrainer trainer(10, 0.001, 5, 250, 28 * 28);
+    trainer.train(argv[1]);
+    trainer.test(argv[2]);
+#endif
+
+#ifdef SVMCLASSIFIER
+    if (argc != 4) {
+        LOG(INFO) << "Usage: " << std::endl;
+        LOG(INFO) << "./svmClassifier svm训练数据 svm测试数据 svm验证数据" << std::endl;
+        return -1;
+    }
+    svmClassifierTrainer trainer;
     trainer.train(argv[1]);
     trainer.test(argv[2]);
 #endif

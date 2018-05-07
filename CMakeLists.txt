@@ -42,9 +42,9 @@ include_directories (
         ./ml_trainer
 )
 
-add_executable(mlpClassifier ${MAIN_SOURCE_FILE} ${DIR_SRCS})
+add_executable(svmClassifier ${MAIN_SOURCE_FILE} ${DIR_SRCS})
 
-target_link_libraries(mlpClassifier
+target_link_libraries(svmClassifier
         ${OpenCV_LIBS}
         libboost_regex.so
         libboost_filesystem.so

@@ -61,7 +61,7 @@ void mlpClassifier::predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) {
     Eigen::MatrixXd softmax_out = mlp_forward(X);
     Eigen::MatrixXd ret(X.rows(), 1);
     for (auto row = 0; row < softmax_out.rows(); ++row) {
-        Eigen::Index row_idx, col_idx;
+        Eigen::DenseIndex row_idx, col_idx;
         softmax_out.row(row).maxCoeff(&row_idx, &col_idx);
         ret(row, 0) = static_cast<double>(col_idx);
     }

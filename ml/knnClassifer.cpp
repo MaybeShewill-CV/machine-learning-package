@@ -114,7 +114,7 @@ void KnnClassifer::predict(const Eigen::MatrixXd &X, Eigen::MatrixXd &RET) {
 
     Eigen::MatrixXd knn_top_votes_matrix(X.rows(), 1);
     for (auto i = 0; i < knn_votes_matrix.rows(); ++i) {
-        Eigen::Index tmp;
+        Eigen::DenseIndex tmp;
         knn_votes_matrix.row(i).array().maxCoeff(&tmp);
         knn_top_votes_matrix(i, 0) = knn_label_matrix(i, tmp);
     }

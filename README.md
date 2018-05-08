@@ -23,13 +23,28 @@ make -j
 This will compile a binary file. You can modified the main_test.cpp and the CMakeLists.txt file to compile different machine learning method binary file.
 
 ## Usage
-#### Gaussian Mixture MOdel for clustering
+#### Gaussian Mixture Model for clustering
 ```
 ./bin_root/gmmCluster ../data/kmeans.txt ../data/kmeans.txt ../kmeans.txt
 ```
 `Origin data distribution is as follows`
 
 ![gmm_cluster_ori](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster_ori.jpg)
+
 `Clustering visualization result is as follows`
 
 ![gmm_cluster_visualization](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster.gif)
+
+#### DBScan Model for clustering
+```
+./bin_root/dbscanCluster ../data/kmeans.txt ../data/kmeans.txt ../kmeans.txt
+```
+`Origin data distribution is as follows`
+
+![dbscan_cluster_ori](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster_ori.jpg)
+
+`Clustering visualization result is as follows`
+
+![dbscan_cluster_visualization](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster.gif)
+
+

@@ -1,5 +1,5 @@
 # machine-learning-package
-Implement useful machine learning method based on C++. The matrix operation relies on the eigen library and some methods uses opencv only for visualization.The machine method mainly include classify method such as SVM,logistic,decision tree,mlp etc, cluster method such as kmeans,gmm,dbscan,lvq etc and regression method such as linear regression.
+Implement useful machine learning method based on C++. The matrix operation relies on the eigen library and some methods uses opencv only for visualization.The machine method mainly include classification model such as SVM,logistic,decision tree,mlp etc, cluster model such as kmeans,gmm,dbscan,lvq etc and regression model such as linear regression.
 
 ## Installation
 This software has only been tested on ubuntu 16.04(x64), eigen3, opencv3.4. To install this package your compiler need to support C++11. All the machine learning methods shared the same interface which is convenient to call or modify.

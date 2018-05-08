@@ -28,6 +28,10 @@ This will compile a binary file. You can modified the main_test.cpp and the CMak
 ./bin_root/gmmCluster ../data/kmeans.txt ../data/kmeans.txt ../kmeans.txt
 ```
 `Origin data distribution is as follows`
-![gmm_cluster_ori](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster_ori.jpg)
+
+![gmm_cluster_ori]
+(https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster_ori.jpg)
 `Clustering visualization result is as follows`
-![gmm_cluster_visualization](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster.gif)
+
+![gmm_cluster_visualization]
+(https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster.gif)

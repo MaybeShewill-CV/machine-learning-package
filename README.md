@@ -41,10 +41,10 @@ This will compile a binary file. You can modified the main_test.cpp and the CMak
 ```
 `Origin data distribution is as follows`
 
-![dbscan_cluster_ori](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster_ori.jpg)
+![dbscan_cluster_ori](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/dnscan_ori.png)
 
 `Clustering visualization result is as follows`
 
-![dbscan_cluster_visualization](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/gmm_cluster.gif)
+![dbscan_cluster_visualization](https://github.com/TJCVRS/machine-learning-package/blob/master/data/images/dbscan_result.png)
 
 

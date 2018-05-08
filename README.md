@@ -20,7 +20,7 @@ cd build
 cmake ..
 make -j
 ```
-This will compile a binary file. You can modified the main_test.cpp and the CMakeLists.txt file to compile different machine learning method binary file.
+This will compile a binary file. You can modified the main_test.cpp and the CMakeLists.txt file to compile different machine learning model binary file. And you can write your own derived trainer class to adaptive your own data format.
 
 ## Usage
 #### Gaussian Mixture Model for clustering

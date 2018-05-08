@@ -61,6 +61,7 @@ void svmClassifier::simplified_smo(const Eigen::MatrixXd &X,
     if (!_process_status_stack.empty()) {
         svm_internal::clear_stack(_process_status_stack);
     }
+
     while (loop_times < _max_iter_times && !terminate_smo()) {
         auto changed_alpha_nums = 0;
         for (auto i = 0; i < X.rows(); ++i) {
@@ -141,8 +142,8 @@ void svmClassifier::simplified_smo(const Eigen::MatrixXd &X,
                 _lagrangian_mul_coffecient(i) = a_i_new;
                 _lagrangian_mul_coffecient(index_vec[select_index]) = a_j_clip;
 
-                // 输出信息
 #ifdef DEBUG
+                // 输出参数更新信息
                 LOG(INFO) << "[Epoch/Iter]: " << "[" << loop_times_2 << "/" << i << "]:" << std::endl;
                 LOG(INFO) << "---a_i_old: " << a_i << ", a_i_new: " << a_i_new << std::endl;
                 LOG(INFO) << "---a_j_old: " << a_j << ", a_j_new: " << a_j_clip << std::endl;

@@ -15,6 +15,7 @@
 #include <dbscanClusterTrainer.h>
 #include <mlpClassifierTrainer.h>
 #include <svmClassifierTrainer.h>
+#include <pcaDimReduction.h>
 
 //#define TEST
 //#define DATALOADER_TEST
@@ -28,6 +29,7 @@
 //#define DBSCAN_TEST
 //#define MLPCLASSIFIER_TEST
 #define SVMCLASSIFIER
+//#define PCA
 
 int main(int argc, char **argv) {
 
@@ -167,6 +169,10 @@ int main(int argc, char **argv) {
     svmClassifierTrainer trainer;
     trainer.train(argv[1]);
     trainer.test(argv[2]);
+#endif
+
+#ifdef PCA
+    pcaDimReduction pca;
 #endif
 
 #ifdef TEST
